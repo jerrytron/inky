@@ -91,6 +91,10 @@ app.on('ready', function () {
             var win = ProjectWindow.focused();
             if (win) win.save();
         },
+        exportChoosatron: () => {
+            var win = ProjectWindow.focused();
+            if (win) win.exportChoosatron();
+        },
         exportJson: () => {
             var win = ProjectWindow.focused();
             if (win) win.exportJson();
@@ -107,6 +111,9 @@ app.on('ready', function () {
         },
         toggleTags: (item, focusedWindow, event) => {
             focusedWindow.webContents.send("set-tags-visible", item.checked);
+        },
+        suggestVocab: (item, focusedWindow, event) => {
+            focusedWindow.webContents.send("set-suggest-vocab", item.checked);
         },
         nextIssue: (item, focusedWindow) => {
             focusedWindow.webContents.send("next-issue");

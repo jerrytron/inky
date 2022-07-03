@@ -345,11 +345,79 @@ function copyFile(source, destination, transform) {
     });
 }
 
-// exportType is "json", "web", or "js"
+// exportType is "dam", "json", "web", or "js"
 InkProject.prototype.export = function(exportType) {
 
     if( !this.ready ) {
         alert(i18n._("Project not quite fully loaded! Please try exporting again in a couple of seconds..."));
+        return;
+    }
+
+    // If DAM
+    if (exportType == "dam") {
+        LiveCompiler.exportChoosatron((err, compiledJsonTempPath) => {
+            alert(i18n._("choosatron1"));
+            if( err ) {
+                alert(`${i18n._("Could not export:")} ${err}`);
+                return;
+            }
+
+            if( !this.defaultExportPath && this.mainInk.absolutePath() ) {
+                this.defaultExportPath = this.mainInk.absolutePath();
+            }
+
+            if( this.defaultExportPath ) {
+                var pathObj = path.parse(this.defaultExportPath);
+                if( exportType == "dam" ) {
+                    if( pathObj.ext != ".dam" )
+                        pathObj.base = path.basename(this.damFilename());
+                    pathObj.ext = ".dam";
+                }
+    
+                this.defaultExportPath = path.format(pathObj);
+            }
+    
+            var saveOptions = {
+                defaultPath: this.defaultExportPath
+            }
+    
+            if( exportType == "dam" ) {
+                saveOptions.filters = [
+                    { name: i18n._("Choosatron files"), extensions: ["dam"] }
+                ]
+            }
+    
+            dialog.showSaveDialog(remote.getCurrentWindow(), saveOptions, (targetSavePath) => {
+                if( targetSavePath ) { 
+                    this.defaultExportPath = targetSavePath;
+
+                    alert(i18n._("choosatron2"));
+    
+                    if( exportType == "dam" ) {
+                        fs.stat(targetSavePath, (err, stats) => {
+    
+                            // File already exists, or there's another error
+                            // (error when code == ENOENT means file doens't exist, which is fine)
+                            if( !err || err.code != "ENOENT" ) {
+                                if( err ) alert(`${i18n._("Sorry, could not save to")} ${targetSavePath}`);
+    
+                                if( stats.isFile() ) fs.unlinkSync(targetSavePath);
+    
+                                if( stats.isDirectory() ) {
+                                    alert(i18n._("Could not save because directory exists with the given name"));
+                                    return
+                                }
+                            }
+
+                            // Choosatron (DAM) file:
+                            if( exportType == "dam" ) {
+                                this.buildForChoosatron(compiledJsonTempPath, targetSavePath);
+                            }
+                        });
+                    }
+                }
+            });
+        });
         return;
     }
 
@@ -441,6 +509,10 @@ InkProject.prototype.export = function(exportType) {
     });
 }
 
+InkProject.prototype.exportChoosatron = function() {
+    this.export("dam");
+}
+
 InkProject.prototype.exportJson = function() {
     this.export("json");
 }
@@ -451,6 +523,23 @@ InkProject.prototype.exportForWeb = function() {
 
 InkProject.prototype.exportJSOnly = function() {
     this.export("js");
+}
+
+// For Choosatron (DAM) binaries
+InkProject.prototype.damFilename = function() {
+    // Derive story content dam file from root ink filename
+    // Remove .ink extension if it's ".ink"
+    var mainInkRootName = this.mainInk.filename();
+    if( path.extname(mainInkRootName) == ".ink" )
+        mainInkRootName = path.basename(mainInkRootName, ".ink");
+    var damContentFilename = mainInkRootName+".dam";
+
+    return damContentFilename;
+}
+
+// Export the Choosatron data.
+InkProject.prototype.buildForChoosatron = function(dataFilePath, targetPath) {
+    copyFile(dataFilePath, targetPath);
 }
 
 InkProject.prototype.jsFilename = function() {
@@ -720,6 +809,12 @@ ipc.on("project-new-include", () => {
 ipc.on("project-save", (event) => {
     if( InkProject.currentProject ) {
         InkProject.currentProject.save();
+    }
+});
+
+ipc.on("project-export-choosatron", (event) => {
+    if( InkProject.currentProject ) {
+        InkProject.currentProject.exportChoosatron();
     }
 });
 

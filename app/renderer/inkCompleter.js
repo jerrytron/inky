@@ -67,6 +67,7 @@ function getAllVocabSuggestions(inkFiles) {
 
 exports.inkCompleter = {
     inkFiles: [],
+    suggestVocab: true,
 
     getCompletions(editor, session, pos, prefix, callback) {
         // There are three possible ways we may want to suggest completions:
@@ -93,11 +94,16 @@ exports.inkCompleter = {
         } else if( isCursorInLogic ) {
             const divertTargetSuggestions = getAllDivertTargetSuggestions(this.inkFiles);
             const variableSuggestions = getAllVariableSuggestions(this.inkFiles);
-            const vocabSuggestions = getAllVocabSuggestions(this.inkFiles);
-            suggestions = divertTargetSuggestions.concat(variableSuggestions).
-                    concat(vocabSuggestions);
+
+            if( this.suggestVocab ) {
+                const vocabSuggestions = getAllVocabSuggestions(this.inkFiles);
+                suggestions = divertTargetSuggestions.concat(variableSuggestions).
+                        concat(vocabSuggestions);
+            }
         } else {
-            suggestions = getAllVocabSuggestions(this.inkFiles);
+            if( this.suggestVocab ) {
+                suggestions = getAllVocabSuggestions(this.inkFiles);
+            }
         }
 
         callback(null, suggestions);

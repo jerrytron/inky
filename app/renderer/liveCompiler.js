@@ -125,6 +125,20 @@ function exportJson(inkJsCompatible, callback) {
     updateCompilerIsBusy(true);
 }
 
+function exportChoosatron(callback) {
+    exportCompleteCallback = callback;
+
+    var instr = buildCompileInstruction();
+    instr.choosatron = true;
+    instr.export = true;
+    instr.inkJsCompatible = false;
+    currentExportSessionId = instr.sessionId;
+
+    ipc.send("compile", instr);
+
+    updateCompilerIsBusy(true);
+}
+
 function getStats(callback) {
     statsCompleteCallback = callback;
 
@@ -406,6 +420,7 @@ exports.LiveCompiler = {
     setProject: setProject,
     reload: reloadInklecateSession,
     exportJson: exportJson,
+    exportChoosatron: exportChoosatron,
     setEdited: () => { lastEditorChange = Date.now(); },
     setEvents: (e) => { events = e; },
     getIssues: () => { return issues; },

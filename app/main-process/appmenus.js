@@ -202,6 +202,12 @@ function refresh() {
                     type: 'separator'
                 },
                 {
+                    label: i18n._('Export to Choosatron...'),
+                    accelerator: 'CmdOrCtrl+Shift+C',
+                    enabled: callbacks.isFocusedWindow,
+                    click: callbacks.exportChoosatron
+                },
+                {
                     label: i18n._('Export to JSON...'),
                     accelerator: 'CmdOrCtrl+Shift+S',
                     enabled: callbacks.isFocusedWindow,
@@ -327,6 +333,12 @@ function refresh() {
                     type: "checkbox",
                     checked: true,
                     click: callbacks.toggleTags
+                },
+                {
+                    label: i18n._('Suggest vocabulary'),
+                    type: "checkbox",
+                    checked: true,
+                    click: callbacks.suggestVocab
                 },
                 {
                         label: i18n._('Word count and more'),

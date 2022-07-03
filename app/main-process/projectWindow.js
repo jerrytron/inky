@@ -106,6 +106,10 @@ ProjectWindow.prototype.save = function() {
     this.browserWindow.webContents.send('project-save');
 }
 
+ProjectWindow.prototype.exportChoosatron = function() {
+    this.browserWindow.webContents.send('project-export-choosatron');
+}
+
 ProjectWindow.prototype.exportJson = function() {
     this.browserWindow.webContents.send('project-export');
 }

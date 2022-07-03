@@ -159,6 +159,13 @@ exports.EditorView = {
     setValue: (v) => { editor.setValue(v); },
     insert: (txt) => editor.insert(txt),
     gotoLine: (row, col) => { editor.gotoLine(row, col); editor.focus(); },
+    setSuggestVocab: (suggest) => {
+        // TODO-JB: Clean up.
+        // editor.setOptions({
+        //     enableLiveAutocompletion: suggest,
+        // });
+        inkCompleter.suggestVocab = suggest
+    },
     addError: addError,
     setErrors: setErrors,
     setFiles: (inkFiles) => {

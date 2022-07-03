@@ -325,6 +325,13 @@ ipc.on("set-tags-visible", (event, visible) => {
 });
 
 
+// TODO-JB: Clean this up.
+// suggestVocab(null, window.localStorage.getItem("suggestVocab"));
+ipc.on("set-suggest-vocab", (event, suggest) => {
+    EditorView.setSuggestVocab(suggest);
+    // window.localStorage.setItem("suggestVocab", suggest);
+});
+
 
 function updateTheme(event, newTheme) {
     let themes = ["dark", "contrast", "focus"];

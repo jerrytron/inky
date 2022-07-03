@@ -1,8 +1,8 @@
 {
-  "name": "inky",
-  "productName": "Inky",
+  "name": "inkytron",
+  "productName": "Inkytron",
   "version": "0.13.0",
-  "description": "An editor for ink",
+  "description": "An editor for ink & choosatron",
   "main": "main-process/main.js",
   "scripts": {
     "postinstall": "node ../build/createDocumentnavigation.js && markdown-html resources/Documentation/WritingWithInk.md -s resources/Documentation/documentation.css -o renderer/documentation/embedded.html",

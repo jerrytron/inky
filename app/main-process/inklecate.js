@@ -65,11 +65,19 @@ function compile(compileInstruction, requester) {
     if( compileInstruction.play )
         inklecateOptions[0] += "p";
 
-    var jsonExportPath = null;
+    var exportPath = null;
     if( compileInstruction.export )  {
-        inklecateOptions.push("-o");
-        jsonExportPath = path.join(uniqueDirPath, `export_${sessionId}.json`);
-        inklecateOptions.push(jsonExportPath);
+        if (compileInstruction.choosatron) {
+            inklecateOptions[0] = "-ckd";
+            inklecateOptions.push("-o");
+            exportPath = path.join(uniqueDirPath, `export_${sessionId}.dam`);
+            inklecateOptions.push(exportPath);
+        } else {
+            // inklecateOptions[0] = inklecateOptions[0] + "j";
+            inklecateOptions.push("-o");
+            exportPath = path.join(uniqueDirPath, `export_${sessionId}.json`);
+            inklecateOptions.push(exportPath);
+        }
     }
 
     if( compileInstruction.stats ) {
@@ -130,7 +138,7 @@ function compile(compileInstruction, requester) {
             sendAnyErrors();
 
             if( code == 0 || code === undefined ) {
-                requester.send('inklecate-complete', sessionId, jsonExportPath);
+                requester.send('inklecate-complete', sessionId, exportPath);
             }
             else {
                 requester.send('play-exit-due-to-error', code, sessionId);
