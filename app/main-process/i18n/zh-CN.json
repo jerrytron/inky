@@ -1,5 +1,5 @@
 {
-    "About Inky": "关于 Inky",
+    "About Inkytron": "关于 Inkytron",
     "File": "文件",
     "New Project": "新的窗口",
     "New Included Ink File": "新建 .ink 文件",
@@ -73,6 +73,8 @@
     "Quit": "退出",
     "Bring All to Front": "同时包含所有字体文件",
     "Inky": "Inky",
+    "Inkytron": "Inkytron",
+    "Choosatron": "Choosatron",
     "Open main ink file": "打开 main ink 文件",
     "Ink files": "Ink 文件",
     "Sorry, the ink compiler crashed ☹": "对不起，ink 编译器崩溃了 ☹",

@@ -8,7 +8,7 @@ const i18n = require('./i18n/i18n.js');
 
 const electronWindowOptions = {
     width: 340,
-    height: 270,
+    height: 280,
     resizable: false,
     show: false,
     autoHideMenuBar: true,
@@ -34,7 +34,7 @@ var aboutWindow = null;
 
 
 function AboutWindow(theme) {
-    electronWindowOptions.title = i18n._("About Inky");
+    electronWindowOptions.title = i18n._("About Inkytron");
 
     var w = new BrowserWindow(electronWindowOptions);
     w.loadURL("file://" + __dirname + "/../renderer/about/about.html");
