@@ -5,6 +5,7 @@ const $ = window.jQuery = require('../jquery-2.2.3.min.js');
 
 ipc.on("set-about-data", (event, data) => {
     $("#version-inky").text("Inky version: "+data.inkyVersion);
+    $("#version-choosatron").text("Choosatron version: 0.2.0");
     $("#version-ink").text("ink version: "+data.inkVersion);
     $("#version-inkjs").text("inkjs version: "+data.inkjsVersion);
 });
