@@ -345,6 +345,19 @@ function copyFile(source, destination, transform) {
     });
 }
 
+// Helper to copy a binary file
+function copyBinaryFile(source, destination) {
+    fs.readFile(source, (err, fileContent) => {
+        if( !err && fileContent ) {
+            if( fileContent.length < 1 ) throw "Trying to write (copy) empty file!";
+            
+            fs.writeFile(destination, fileContent, err => {
+                if( err ) alert(`Failed to save file '${destination}'`);
+            });
+        }
+    });
+}
+
 // exportType is "dam", "json", "web", or "js"
 InkProject.prototype.export = function(exportType) {
 
@@ -356,7 +369,6 @@ InkProject.prototype.export = function(exportType) {
     // If DAM
     if (exportType == "dam") {
         LiveCompiler.exportChoosatron((err, compiledJsonTempPath) => {
-            alert(i18n._("choosatron1"));
             if( err ) {
                 alert(`${i18n._("Could not export:")} ${err}`);
                 return;
@@ -390,8 +402,6 @@ InkProject.prototype.export = function(exportType) {
             dialog.showSaveDialog(remote.getCurrentWindow(), saveOptions, (targetSavePath) => {
                 if( targetSavePath ) { 
                     this.defaultExportPath = targetSavePath;
-
-                    alert(i18n._("choosatron2"));
     
                     if( exportType == "dam" ) {
                         fs.stat(targetSavePath, (err, stats) => {
@@ -411,7 +421,7 @@ InkProject.prototype.export = function(exportType) {
 
                             // Choosatron (DAM) file:
                             if( exportType == "dam" ) {
-                                this.buildForChoosatron(compiledJsonTempPath, targetSavePath);
+                                this.writeChoosatronStory(compiledJsonTempPath, targetSavePath);
                             }
                         });
                     }
@@ -538,8 +548,8 @@ InkProject.prototype.damFilename = function() {
 }
 
 // Export the Choosatron data.
-InkProject.prototype.buildForChoosatron = function(dataFilePath, targetPath) {
-    copyFile(dataFilePath, targetPath);
+InkProject.prototype.writeChoosatronStory = function(dataFilePath, targetPath) {
+    copyBinaryFile(dataFilePath, targetPath);
 }
 
 InkProject.prototype.jsFilename = function() {
